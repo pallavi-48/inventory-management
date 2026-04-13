@@ -11,31 +11,50 @@ public class AppTest {
         app = new App();
     }
 
-    // TEST CREATE + READ
+    // TEST CREATE + GET
     @Test
     void testCreateAndGet() {
-        Long id = app.create("Sample Data");
-        assertNotNull(id);
-        assertEquals("Sample Data", app.get(id));
+        app.create("Item1", 10);
+        assertEquals(10, app.get("Item1"));
     }
 
-    // TEST UPDATE
+    // TEST STOCK INCREASE
     @Test
-    void testUpdate() {
-        Long id = app.create("Old Data");
-        boolean updated = app.update(id, "New Data");
+    void testIncreaseStock() {
+        app.create("Item2", 5);
+        boolean updated = app.update("Item2", 5);
 
         assertTrue(updated);
-        assertEquals("New Data", app.get(id));
+        assertEquals(10, app.get("Item2"));
+    }
+
+    // TEST STOCK DECREASE SUCCESS
+    @Test
+    void testDecreaseStockSuccess() {
+        app.create("Item3", 10);
+        boolean updated = app.update("Item3", -4);
+
+        assertTrue(updated);
+        assertEquals(6, app.get("Item3"));
+    }
+
+    // TEST STOCK DECREASE FAILURE
+    @Test
+    void testDecreaseStockFailure() {
+        app.create("Item4", 3);
+        boolean updated = app.update("Item4", -5);
+
+        assertFalse(updated);
+        assertEquals(3, app.get("Item4"));
     }
 
     // TEST DELETE
     @Test
     void testDelete() {
-        Long id = app.create("Delete Me");
-        boolean deleted = app.delete(id);
+        app.create("Item5", 2);
+        boolean deleted = app.delete("Item5");
 
         assertTrue(deleted);
-        assertNull(app.get(id));
+        assertEquals(0, app.get("Item5"));
     }
 }

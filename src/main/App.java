@@ -2,40 +2,42 @@ import java.util.*;
 
 public class App {
 
-    private Map<Long, String> data = new HashMap<>();
-    private long nextId = 1;
+    private Map<String, Integer> data = new HashMap<>();
 
-    // CREATE
-    public Long create(String value) {
-        if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("Value cannot be empty");
+    // ADD PRODUCT (CREATE)
+    public void create(String product, int quantity) {
+        if (product == null || product.trim().isEmpty()) {
+            throw new IllegalArgumentException("Product cannot be empty");
         }
-        Long id = nextId++;
-        data.put(id, value);
-        return id;
+        data.put(product, quantity);
     }
 
-    // READ
-    public String get(Long id) {
-        return data.get(id);
+    // GET STOCK (READ)
+    public int get(String product) {
+        return data.getOrDefault(product, 0);
     }
 
-    // UPDATE
-    public boolean update(Long id, String newValue) {
-        if (data.containsKey(id)) {
-            data.put(id, newValue);
+    // UPDATE STOCK
+    public boolean update(String product, int change) {
+        if (data.containsKey(product)) {
+            int newStock = data.get(product) + change;
+
+            if (newStock < 0) {
+                return false; // not enough stock
+            }
+
+            data.put(product, newStock);
             return true;
         }
         return false;
     }
 
-    // DELETE
-    public boolean delete(Long id) {
-        return data.remove(id) != null;
+    // DELETE PRODUCT
+    public boolean delete(String product) {
+        return data.remove(product) != null;
     }
 
-    // MAIN (optional but safe to write)
     public static void main(String[] args) {
-        System.out.println("Application running...");
+        System.out.println("Inventory App Running...");
     }
 }
